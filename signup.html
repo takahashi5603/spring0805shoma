@@ -2,7 +2,7 @@
 <html lang="ja">
   <head>
     <meta charset="utf-8" />
-    <title>ログイン</title>
+    <title>ユーザー登録</title>
 
     <!-- CDN読み込み -->
     <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
@@ -19,23 +19,24 @@
     <div id="app">
       <v-app>
         <v-container>
-          <v-row class="text-h4 mb-4" justify="center">ログイン</v-row>
+          <v-row class="text-h4 mb-4" justify="center">ユーザー登録</v-row>
 
           <v-row justify="center">
             <v-col cols="12" sm="6" md="4">
               <v-text-field v-model="userid" label="ユーザーID" outlined></v-text-field>
               <v-text-field v-model="password" label="パスワード" type="password" outlined></v-text-field>
+              <v-text-field v-model="displayName" label="表示名" outlined></v-text-field>
 
-              <v-btn color="primary" class="mt-4" block @click="login" :disabled="loading">
-                <template v-if="!loading">ログイン</template>
+              <v-btn color="primary" class="mt-4" block @click="signup" :disabled="loading">
+                <template v-if="!loading">登録</template>
                 <template v-else>
                   <v-progress-circular indeterminate color="white" size="20" class="mr-2"></v-progress-circular>
-                  認証中...
+                  登録中...
                 </template>
               </v-btn>
 
-              <v-btn variant="text" class="mt-2" block @click="goToSignup">
-                新規登録はこちら
+              <v-btn variant="text" class="mt-2" block @click="goToLogin">
+                ログインに戻る
               </v-btn>
             </v-col>
           </v-row>
@@ -63,53 +64,45 @@
         setup() {
           const userid = ref("");
           const password = ref("");
+          const displayName = ref("");
           const loading = ref(false);
           const dialog = ref(false);
           const message = ref("");
 
-          // ログイン処理
-          const login = async () => {
-            if (!userid.value || !password.value) {
-              message.value = "ユーザーIDとパスワードを入力してください。";
+          // ユーザー登録処理
+          const signup = async () => {
+            if (!userid.value || !password.value || !displayName.value) {
+              message.value = "すべての項目を入力してください。";
               dialog.value = true;
               return;
             }
 
             loading.value = true;
             try {
-              // Spring SecurityのformLoginはフォームデータで受け取るため、URLSearchParamsを使用
-              const params = new URLSearchParams();
-              params.append("id", userid.value);
-              params.append("password", password.value);
-
               const res = await axios.post(
-                "https://backapp-takahashi.m3harbor.net/api/login",
-                params,
+                "※バックエンドのカスタムドメインURLを記載※/api/register",
+                { id: userid.value, password: password.value, name: displayName.value },
                 { withCredentials: true }
               );
 
+              message.value = res.data.message;
+              dialog.value = true;
               if (res.data.result === "success") {
-                message.value = "ログイン成功！";
-                dialog.value = true;
-                setTimeout(() => (window.location.href = "home.html"), 1000);
+                setTimeout(() => (window.location.href = "index.html"), 1000);
               }
             } catch (err) {
-              if (err.response && err.response.status === 401) {
-                message.value = "IDまたはパスワードが不正です。";
-              } else {
-                message.value = "通信エラー：" + (err.message || "不明なエラー");
-              }
+              message.value = "通信エラー：" + (err.message || "不明なエラー");
               dialog.value = true;
             } finally {
               loading.value = false;
             }
           };
 
-          const goToSignup = () => {
-            window.location.href = "signup.html";
+          const goToLogin = () => {
+            window.location.href = "index.html";
           };
 
-          return { userid, password, loading, dialog, message, login, goToSignup };
+          return { userid, password, displayName, loading, dialog, message, signup, goToLogin };
         },
       })
         .use(vuetify)
