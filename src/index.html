@@ -1,0 +1,60 @@
+<!-- Vueで指定された"app"要素、この中でのみVueが有効 -->
+<div id="app">
+  <v-app>
+    <v-main>
+      <v-container>
+        <v-row class="text-h3 mb-3 mt-3" justify="center">
+          APIに接続してみよう
+        </v-row>
+
+        <v-row class="mb-3 mt-3" align="center" justify="center">
+          <v-col cols="4">
+            <v-text-field
+              class="ml-6 mr-6"
+              v-model="ID"
+              label="IDを入力"
+              placeholder="IDを入力…"
+              outlined
+            ></v-text-field>
+          </v-col>
+
+          <v-col cols="6">
+            <v-text-field
+              class="ml-6 mr-6"
+              v-model="Name"
+              label="Nameを入力"
+              placeholder="Nameを入力…"
+              outlined
+            ></v-text-field>
+          </v-col>
+        </v-row>
+
+        <v-row class="mb-3 mt-3" align="center" justify="center">
+          入力内容　ID: {{ ID }} Name: {{ Name }}
+          <v-btn
+            @click="addData"
+            dark
+            small
+            color="indigo"
+            class="ml-4"
+          >
+            DBに登録
+          </v-btn>
+        </v-row>
+
+        <v-row class="mb-3 mt-3" justify="center">
+          <v-btn @click="readData" rounded>現在の登録内容を表示する</v-btn>
+        </v-row>
+
+        <v-row
+          v-for="(data, index) in dataList"
+          :key="index"
+          class="mb-2"
+          justify="center"
+        >
+          ID: {{ data.ID }}, Name: {{ data.Name }}
+        </v-row>
+      </v-container>
+    </v-main>
+  </v-app>
+</div>
