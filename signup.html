@@ -80,7 +80,7 @@
             loading.value = true;
             try {
               const res = await axios.post(
-                "※バックエンドのカスタムドメインURLを記載※/api/register",
+                "https://backapp-takahashi.m3harbor.net/api/register",
                 { id: userid.value, password: password.value, name: displayName.value },
                 { withCredentials: true }
               );
