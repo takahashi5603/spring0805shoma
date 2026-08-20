@@ -1,78 +1,79 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 
-  <head>
-    <meta charset="UTF-8">
-    <title>API接続_Spring</title>
-    <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/vuetify@3/dist/vuetify.min.css'>
+<head>
+  <meta charset="UTF-8">
+  <title>ホーム画面</title>
 
-  </head>
-    
-  <body>
-  <!-- Vueで指定された"app"要素、この中でのみVueが有効 -->
-<div id="app">
-  <v-app>
-    <v-main>
-      <v-container>
-        <v-row class="text-h3 mb-3 mt-3" justify="center">
-          APIに接続してみよう
-        </v-row>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vuetify@3/dist/vuetify.min.css">
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vuetify@3/dist/vuetify.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
-        <v-row class="mb-3 mt-3" align="center" justify="center">
-          <v-col cols="4">
-            <v-text-field
-              class="ml-6 mr-6"
-              v-model="ID"
-              label="IDを入力"
-              placeholder="IDを入力…"
-              outlined
-            ></v-text-field>
-          </v-col>
+  <style>
+    body { background-color: #fafafa; }
+    .top-right {
+      position: fixed;
+      top: 16px;
+      right: 24px;
+      display: flex;
+      gap: 8px;
+      z-index: 100;
+    }
+  </style>
+</head>
 
-          <v-col cols="6">
-            <v-text-field
-              class="ml-6 mr-6"
-              v-model="Name"
-              label="Nameを入力"
-              placeholder="Nameを入力…"
-              outlined
-            ></v-text-field>
-          </v-col>
-        </v-row>
+<body>
+  <div id="app">
+    <v-app>
+      <v-main>
+        <div class="top-right">
+          <v-btn color="primary" @click="checkSession" :disabled="loading">セッション確認</v-btn>
+          <v-btn color="red" @click="logout" :disabled="loading">ログアウト</v-btn>
+        </div>
 
-        <v-row class="mb-3 mt-3" align="center" justify="center">
-          入力内容　ID: {{ ID }} Name: {{ Name }}
-          <v-btn
-            @click="addData"
-            dark
-            small
-            color="indigo"
-            class="ml-4"
-          >
-            DBに登録
-          </v-btn>
-        </v-row>
+        <v-container class="mt-12">
+          <v-row class="text-h4 mb-6" justify="center">
+            ホーム画面（セッション維持テスト）
+          </v-row>
 
-        <v-row class="mb-3 mt-3" justify="center">
-          <v-btn @click="readData" rounded>現在の登録内容を表示する</v-btn>
-        </v-row>
+          <v-row class="mb-3 mt-3" align="center" justify="center">
+            <v-col cols="4">
+              <v-text-field v-model="ID" label="IDを入力" outlined></v-text-field>
+            </v-col>
+            <v-col cols="6">
+              <v-text-field v-model="Name" label="Nameを入力" outlined></v-text-field>
+            </v-col>
+          </v-row>
 
-        <v-row
-          v-for="(data, index) in dataList"
-          :key="index"
-          class="mb-2"
-          justify="center"
-        >
-          ID: {{ data.ID }}, Name: {{ data.Name }}
-        </v-row>
-      </v-container>
-    </v-main>
-  </v-app>
-</div>
-    <script src='https://unpkg.com/vue@3/dist/vue.global.js'></script>
-<script src='https://cdn.jsdelivr.net/npm/vuetify@3/dist/vuetify.min.js'></script>
-<script src='https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js'></script><script  src="./script.js"></script>
+          <v-row class="mb-3 mt-3" align="center" justify="center">
+            入力内容 ID: {{ ID }} Name: {{ Name }}
+            <v-btn @click="addData" dark small color="indigo" class="ml-4">DBに登録</v-btn>
+          </v-row>
 
-  </body>
-  
+          <v-row class="mb-3 mt-3" justify="center">
+            <v-btn @click="readData" rounded>現在の登録内容を表示する</v-btn>
+          </v-row>
+
+          <v-row v-for="(data, index) in dataList" :key="index" class="mb-2" justify="center">
+            ID: {{ data.ID }}, Name: {{ data.Name }}
+          </v-row>
+
+          <v-dialog v-model="dialog" max-width="400">
+            <v-card>
+              <v-card-title class="headline">メッセージ</v-card-title>
+              <v-card-text>{{ message }}</v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="primary" variant="text" @click="dialog = false">OK</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+        </v-container>
+      </v-main>
+    </v-app>
+  </div>
+
+  <script src="./script.js"></script>
+</body>
 </html>
