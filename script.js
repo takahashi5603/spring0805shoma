@@ -21,13 +21,13 @@ createApp({
       };
 
       // 実際のAPI URLに置き換えてください
-      const response = await axios.post('https://m3h-takahashi-aca.icyisland-c5792467.japaneast.azurecontainerapps.io/api/INSERT', param);
+      const response = await axios.post('https://m3h-takahashi-aca.icyisland-c5792467.japaneast.azurecontainerapps.io/api/INSERT', param,{ withCredentials: true });
       console.log(response.data);
     };
 
     const readData = async () => {
       // 実際のAPI URLに置き換えてください
-      const response = await axios.get('https://m3h-takahashi-aca.icyisland-c5792467.japaneast.azurecontainerapps.io/api/SELECT');
+      const response = await axios.get('https://m3h-takahashi-aca.icyisland-c5792467.japaneast.azurecontainerapps.io/api/SELECT',{ withCredentials: true });
       console.log(response.data);
       dataList.value = response.data.List;
     };
